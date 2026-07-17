@@ -60,43 +60,38 @@
       '<svg class="card-svg" viewBox="0 0 300 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + name + '">' +
         '<defs>' +
           '<linearGradient id="bg-' + uid + '" x1="0" y1="0" x2="0" y2="1">' +
-            '<stop offset="0" stop-color="#211a3d"/>' +
-            '<stop offset="0.55" stop-color="#15102b"/>' +
-            '<stop offset="1" stop-color="#0c0820"/>' +
+            '<stop class="face-stop-1" offset="0"/>' +
+            '<stop class="face-stop-2" offset="1"/>' +
           '</linearGradient>' +
           '<radialGradient id="glow-' + uid + '" cx="0.5" cy="0.46" r="0.55">' +
-            '<stop offset="0" stop-color="' + color + '" stop-opacity="0.55"/>' +
-            '<stop offset="0.6" stop-color="' + color + '" stop-opacity="0.12"/>' +
+            '<stop offset="0" stop-color="' + color + '" stop-opacity="0.5"/>' +
+            '<stop offset="0.6" stop-color="' + color + '" stop-opacity="0.1"/>' +
             '<stop offset="1" stop-color="' + color + '" stop-opacity="0"/>' +
           '</radialGradient>' +
-          '<linearGradient id="gold-' + uid + '" x1="0" y1="0" x2="0" y2="1">' +
-            '<stop offset="0" stop-color="' + GOLD_SOFT + '"/>' +
-            '<stop offset="1" stop-color="' + GOLD + '"/>' +
-          '</linearGradient>' +
         '</defs>' +
-        // 底色
+        // 底色（主题色由 CSS 变量驱动，浅色/深色自动切换）
         '<rect x="5" y="5" width="290" height="470" rx="20" fill="url(#bg-' + uid + ')" stroke="' + color + '" stroke-width="3"/>' +
-        // 内描金边
-        '<rect x="13" y="13" width="274" height="454" rx="14" fill="none" stroke="url(#gold-' + uid + ')" stroke-width="1.2" stroke-opacity="0.7"/>' +
+        // 内描边
+        '<rect class="face-line" x="13" y="13" width="274" height="454" rx="14" fill="none" stroke-width="1.2" stroke-opacity="0.7"/>' +
         // 中央辉光
         '<circle cx="150" cy="222" r="120" fill="url(#glow-' + uid + ')"/>' +
         // 顶部角标
-        '<text x="26" y="50" fill="url(#gold-' + uid + ')" font-family="Georgia, \'Times New Roman\', serif" font-size="26" font-weight="700">' + corner + '</text>' +
+        '<text class="face-ink" x="26" y="50" font-family="Georgia, \'Times New Roman\', serif" font-size="26" font-weight="700">' + corner + '</text>' +
         // 顶部牌名（中文）
-        '<text x="150" y="46" text-anchor="middle" fill="url(#gold-' + uid + ')" font-family="\'PingFang SC\',\'Microsoft YaHei\',sans-serif" font-size="24" font-weight="700" letter-spacing="2">' + name + '</text>' +
+        '<text class="face-ink" x="150" y="46" text-anchor="middle" font-family="\'PingFang SC\',\'Microsoft YaHei\',sans-serif" font-size="24" font-weight="700" letter-spacing="2">' + name + '</text>' +
         // 英文副名
-        '<text x="150" y="68" text-anchor="middle" fill="#b9a7e0" font-family="Georgia, serif" font-size="12" letter-spacing="0.5" opacity="0.85">' + nameEn + '</text>' +
+        '<text class="face-ink-soft" x="150" y="68" text-anchor="middle" font-family="Georgia, serif" font-size="12" letter-spacing="0.5" opacity="0.9">' + nameEn + '</text>' +
         // 中央大号象征符号（发光）
         '<text x="150" y="262" text-anchor="middle" font-size="120" dominant-baseline="middle">' + symbol + '</text>' +
         // 底部花色名
-        '<text x="150" y="430" text-anchor="middle" fill="url(#gold-' + uid + ')" font-family="\'PingFang SC\',\'Microsoft YaHei\',sans-serif" font-size="20" font-weight="600" letter-spacing="3">' + suit + '</text>' +
+        '<text class="face-ink" x="150" y="430" text-anchor="middle" font-family="\'PingFang SC\',\'Microsoft YaHei\',sans-serif" font-size="20" font-weight="600" letter-spacing="3">' + suit + '</text>' +
         // 底部细装饰线
-        '<line x1="80" y1="446" x2="220" y2="446" stroke="url(#gold-' + uid + ')" stroke-width="1" stroke-opacity="0.5"/>' +
+        '<line class="face-line" x1="80" y1="446" x2="220" y2="446" stroke-width="1" stroke-opacity="0.5"/>' +
         // 四角小星点
-        '<circle cx="24" cy="456" r="2" fill="' + GOLD + '" opacity="0.7"/>' +
-        '<circle cx="276" cy="456" r="2" fill="' + GOLD + '" opacity="0.7"/>' +
-        '<circle cx="24" cy="24" r="2" fill="' + GOLD + '" opacity="0.7"/>' +
-        '<circle cx="276" cy="24" r="2" fill="' + GOLD + '" opacity="0.7"/>' +
+        '<circle class="face-line-fill" cx="24" cy="456" r="2" opacity="0.7"/>' +
+        '<circle class="face-line-fill" cx="276" cy="456" r="2" opacity="0.7"/>' +
+        '<circle class="face-line-fill" cx="24" cy="24" r="2" opacity="0.7"/>' +
+        '<circle class="face-line-fill" cx="276" cy="24" r="2" opacity="0.7"/>' +
       '</svg>';
     return svg;
   }
