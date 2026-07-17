@@ -50,6 +50,74 @@
   };
 
   var HISTORY_KEY = 'tarot_history_v1';
+  var THEME_KEY = 'tarot_theme';
+
+  // ---------- 主题（浅色 / 深色） ----------
+  function getTheme() {
+    try { return localStorage.getItem(THEME_KEY) || 'light'; } catch (e) { return 'light'; }
+  }
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#0d0b1f' : '#f3ecdd');
+  }
+  function toggleTheme() {
+    var t = getTheme() === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
+    applyTheme(t);
+    updateThemeBtn();
+    toast(t === 'dark' ? '已切换到深色 🌙' : '已切换到浅色 ☀️');
+  }
+  function makeThemeBtn() {
+    var b = el('button', 'btn btn-ghost theme-btn');
+    b.textContent = getTheme() === 'dark' ? '☀️ 浅色' : '🌙 深色';
+    b.addEventListener('click', toggleTheme);
+    return b;
+  }
+  function updateThemeBtn() {
+    var label = getTheme() === 'dark' ? '☀️ 浅色' : '🌙 深色';
+    var btns = document.querySelectorAll('.theme-btn');
+    Array.prototype.forEach.call(btns, function (b) { b.textContent = label; });
+  }
+
+  // ---------- 使用说明浮层 ----------
+  function buildGuide() {
+    if (document.getElementById('guide-overlay')) return;
+    var ov = el('div', 'guide-overlay');
+    ov.id = 'guide-overlay';
+    ov.innerHTML =
+      '<div class="guide-modal">' +
+        '<button class="guide-close" aria-label="关闭">×</button>' +
+        '<h2>使用说明</h2>' +
+        '<p class="guide-lead">塔罗牌是一种用来「照见内心」的趣味工具。这里的每一张牌都不是预言，而是一面镜子——它用图像与象征，帮你把平时没注意到的想法、情绪和选择看得更清楚。把它当作一次安静的自我对话就好。</p>' +
+        '<h3>怎么玩（三步）</h3>' +
+        '<div class="guide-steps-col">' +
+          '<div class="guide-row"><span class="num">1</span><div><b>选牌阵</b>：根据想探索的问题，挑一个牌阵（每日一牌 / 三张 / 关系 / 凯尔特十字）。</div></div>' +
+          '<div class="guide-row"><span class="num">2</span><div><b>洗牌 + 抽牌</b>：点「洗牌」集中意念，再点「抽牌」，牌会一张张就位。</div></div>' +
+          '<div class="guide-row"><span class="num">3</span><div><b>翻牌看解读</b>：轻点每张牌背，牌面翻开，下方显示这张牌在你所选位置上的含义（正位 / 逆位）。</div></div>' +
+        '</div>' +
+        '<h3>正位 vs 逆位</h3>' +
+        '<p>抽牌时约一半几率出现「逆位」（牌面旋转 180°）。<b>正位</b>代表能量顺畅、自然呈现；<b>逆位</b>通常表示这股能量被阻滞、过度，或提醒你反过来想一想。两者没有好坏，都是线索。</p>' +
+        '<h3>四种牌阵适合什么</h3>' +
+        '<ul class="guide-list">' +
+          '<li><b>每日一牌</b>：不知道问什么时，给今天一个关键词与提醒。</li>' +
+          '<li><b>三张牌（过去 / 现在 / 未来）</b>：看清一件事的发展脉络。</li>' +
+          '<li><b>关系牌阵（你 / 对方 / 关系走向）</b>：梳理一段关系里双方的视角。</li>' +
+          '<li><b>凯尔特十字（10 张）</b>：深入、复杂的问题，做一次全面展开。</li>' +
+        '</ul>' +
+        '<h3>小提示</h3>' +
+        '<ul class="guide-list">' +
+          '<li>同一个问题不要反复抽，先让答案沉淀。</li>' +
+          '<li>读牌义时，相信你第一眼被击中的那句话。</li>' +
+          '<li>结果会自动保存在本机「历史」，可随时回看，<b>不上传任何数据</b>。</li>' +
+        '</ul>' +
+      '</div>';
+    document.body.appendChild(ov);
+    ov.querySelector('.guide-close').addEventListener('click', closeGuide);
+    ov.addEventListener('click', function (e) { if (e.target === ov) closeGuide(); });
+  }
+  function openGuide() { buildGuide(); document.getElementById('guide-overlay').classList.add('open'); }
+  function closeGuide() { var g = document.getElementById('guide-overlay'); if (g) g.classList.remove('open'); }
 
   // ---------- 全局状态 ----------
   var state = {
@@ -116,9 +184,23 @@
     hero.appendChild(el('p', 'site-sub', '照见内心的趣味指引 · 自我觉察与心理投射'));
     hero.appendChild(el('p', 'site-note', '本工具用于自我反思与趣味指引，并非宿命式占卜。牌义由经典塔罗知识整理，请带着开放与好奇去体会。'));
 
+    var actions = el('div', 'hero-actions');
+    var guideBtn = el('button', 'btn btn-ghost', '❔ 使用说明');
+    guideBtn.addEventListener('click', openGuide);
+    var themeBtn = makeThemeBtn();
     var historyBtn = el('button', 'btn btn-ghost history-open', '📜 查看历史');
     historyBtn.addEventListener('click', openHistory);
-    hero.appendChild(historyBtn);
+    actions.appendChild(guideBtn);
+    actions.appendChild(themeBtn);
+    actions.appendChild(historyBtn);
+    hero.appendChild(actions);
+
+    var steps = el('div', 'guide-steps');
+    steps.innerHTML =
+      '<div class="guide-step"><span class="num">1</span><span>选<strong>牌阵</strong></span></div>' +
+      '<div class="guide-step"><span class="num">2</span><span>洗牌 · <strong>抽牌</strong></span></div>' +
+      '<div class="guide-step"><span class="num">3</span><span>翻牌看<strong>解读</strong></span></div>';
+    hero.appendChild(steps);
 
     $app.appendChild(hero);
 
@@ -188,6 +270,9 @@
     bar.appendChild(back);
     var title = el('div', 'topbar-title', escapeHtml(sp.name) + ' <span class="topbar-sub">' + escapeHtml(sp.desc) + '</span>');
     bar.appendChild(title);
+    var topTheme = makeThemeBtn();
+    topTheme.classList.add('topbar-theme');
+    bar.appendChild(topTheme);
     $app.appendChild(bar);
 
     // 牌阵切换 chips
@@ -434,6 +519,14 @@
       $app.innerHTML = '<p class="error">加载失败：card-svg.js 未就绪。</p>';
       return;
     }
+    applyTheme(getTheme());
+    try {
+      var tp = new URLSearchParams(window.location.search).get('theme');
+      if (tp === 'dark' || tp === 'light') { applyTheme(tp); try { localStorage.setItem(THEME_KEY, tp); } catch (e) {} }
+    } catch (e) {}
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { closeGuide(); closeHistory(); }
+    });
     var demoKey = null;
     try {
       var p = new URLSearchParams(window.location.search);
