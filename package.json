@@ -1,0 +1,14 @@
+{
+  "name": "tarot",
+  "version": "1.0.0",
+  "description": "纯静态塔罗牌小站 —— 自我觉察与心理投射的趣味指引工具（78 张离线牌义 + 运行时参数化 SVG 牌面）",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "validate": "node scripts/build-data.js",
+    "start": "python3 -m http.server 8080",
+    "serve": "python3 -m http.server 8080"
+  },
+  "keywords": ["tarot", "static", "svg", "self-awareness", "offline"],
+  "license": "MIT"
+}
