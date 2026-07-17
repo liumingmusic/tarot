@@ -106,9 +106,9 @@ body {
 
 .app {
   position: relative; z-index: 1;
-  max-width: 1080px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 28px 18px calc(40px + env(safe-area-inset-bottom, 0px));
+  padding: 28px 20px calc(40px + env(safe-area-inset-bottom, 0px));
 }
 
 /* ========== 文字与标题 ========== */
@@ -354,24 +354,45 @@ body {
 }
 .history-open { margin: 6px auto 0; display: block; }
 
-/* ========== 牌位网格 ========== */
+/* ========== 牌位网格（桌面优先，响应式放大） ========== */
 .slots {
   width: 100%;
   display: grid;
-  gap: 16px;
+  gap: 18px;
   justify-items: center;
 }
-.spread-daily { grid-template-columns: 1fr; max-width: 300px; margin: 0 auto; }
-.spread-three, .spread-relationship { grid-template-columns: repeat(3, 1fr); max-width: 760px; }
+.spread-daily {
+  grid-template-columns: 1fr;
+  /* 桌面端单张居中且够大 */
+  max-width: min(420px, 85vw);
+  margin: 0 auto;
+}
+.spread-daily .slot { max-width: 360px; }
+
+/* 三张 / 关系：三列等宽，随容器撑满 */
+.spread-three,
+.spread-relationship {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: min(1140px, 94vw);
+}
+.spread-three .slot,
+.spread-relationship .slot {
+  /* 每张牌尽量大，但不至于在窄屏溢出 */
+  max-width: min(320px, 28vw);
+  width: 100%;
+}
+
+/* 凯尔特十字 */
 .spread-celtic {
   grid-template-columns: repeat(5, 1fr);
-  max-width: 960px;
-  gap: 12px;
+  max-width: min(1200px, 96vw);
+  gap: 14px;
 }
 
 .slot {
   width: 100%;
-  max-width: 230px;
+  /* 默认上限，各牌阵可覆盖 */
+  max-width: min(300px, 30vw);
   display: flex; flex-direction: column; align-items: center; gap: 8px;
 }
 .slot-pos {
@@ -417,15 +438,15 @@ body {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 10px 12px;
-  font-size: 12.5px;
-  line-height: 1.6;
+  padding: 11px 14px;
+  font-size: 13px;
+  line-height: 1.65;
   box-shadow: var(--shadow);
 }
 .slot-read[hidden] { display: none; }
 .read-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
-.read-name { font-size: 14px; font-weight: 700; color: var(--gold-soft); }
-.read-orientation { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+.read-name { font-size: 15px; font-weight: 700; color: var(--gold-soft); }
+.read-orientation { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
 .read-orientation.up { color: #2a1d05; background: linear-gradient(180deg, var(--gold-soft), var(--gold)); }
 .read-orientation.rev { color: #fff; background: linear-gradient(180deg, #b06bd6, #7c5cff); }
 .read-meaning { color: var(--ink); margin: 3px 0 6px; }
@@ -663,14 +684,18 @@ body {
   .deck-zone { gap: 12px; }
   .deck { width: 112px; height: 174px; }
 
-  /* 牌位网格：三张/关系变单列 */
+  /* 牌位网格：三张/关系变单列，牌面更大 */
   .spread-three,
   .spread-relationship {
     grid-template-columns: 1fr;
-    max-width: 320px;
+    max-width: min(360px, 88vw);
+    justify-items: center;
   }
   .spread-three .slot,
-  .spread-relationship .slot { max-width: 280px; }
+  .spread-relationship .slot { max-width: min(320px, 82vw); }
+  /* 每日一牌在手机上也放大 */
+  .spread-daily { max-width: min(340px, 88vw); }
+  .spread-daily .slot { max-width: 300px; }
   .slots { gap: 14px; }
 
   /* 凯尔特十字：横向滚动 */
@@ -687,11 +712,11 @@ body {
   }
   .spread-celtic::-webkit-scrollbar { display: none; }
   .spread-celtic .slot {
-    flex: 0 0 64vw;
-    max-width: 260px;
+    flex: 0 0 72vw;
+    max-width: min(300px, 76vw);
     scroll-snap-align: start;
   }
-  .spread-celtic .flip-card { max-width: 220px; margin: 0 auto; }
+  .spread-celtic .flip-card { max-width: 260px; margin: 0 auto; }
   .spread-celtic .slot-read { font-size: 12px; }
 
   /* 解读文本更紧凑 */
@@ -721,7 +746,9 @@ body {
 /* 超小屏兜底 */
 @media (max-width: 380px) {
   .app { padding: 14px 8px calc(28px + env(safe-area-inset-bottom, 0px)); }
-  .spread-celtic .slot { flex-basis: 72vw; max-width: 72vw; }
+  .spread-celtic .slot { flex-basis: 80vw; max-width: 80vw; }
+  .spread-daily { max-width: 92vw; }
+  .spread-three, .spread-relationship { max-width: 96vw; }
   .guide-step { font-size: 11.5px; padding: 6px 10px; }
   .spread-card-name { font-size: 15.5px; }
 }
