@@ -181,7 +181,7 @@
 
     var hero = el('section', 'hero');
     hero.appendChild(el('h1', 'site-title', '塔罗牌'));
-    hero.appendChild(el('p', 'site-sub', '照见内心的趣味指引 · 自我觉察与心理投射'));
+    hero.appendChild(el('p', 'site-sub', '照见内心的趣味指引'));
     hero.appendChild(el('p', 'site-note', '本工具用于自我反思与趣味指引，并非宿命式占卜。牌义由经典塔罗知识整理，请带着开放与好奇去体会。'));
 
     var actions = el('div', 'hero-actions');
@@ -265,11 +265,13 @@
 
     // 顶栏
     var bar = el('div', 'topbar');
-    var back = el('button', 'btn btn-ghost', '← 牌阵');
+    var back = el('button', 'topbar-back', '← 牌阵');
     back.addEventListener('click', renderHome);
     bar.appendChild(back);
+    var titleWrap = el('div', 'topbar-title-wrap');
     var title = el('div', 'topbar-title', escapeHtml(sp.name) + ' <span class="topbar-sub">' + escapeHtml(sp.desc) + '</span>');
-    bar.appendChild(title);
+    titleWrap.appendChild(title);
+    bar.appendChild(titleWrap);
     var topTheme = makeThemeBtn();
     topTheme.classList.add('topbar-theme');
     bar.appendChild(topTheme);
